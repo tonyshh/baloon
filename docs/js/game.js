@@ -10,6 +10,7 @@
   document.getElementById('total').textContent = total;
 
   function showEndScreen() {
+    console.log("🛑 showEndScreen called, hits=", hits, "total=", total);
   // Прячем все игровые элементы
   document.getElementById('balloon-container').style.display = 'none';
   document.getElementById('target').style.display = 'none';

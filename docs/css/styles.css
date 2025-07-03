@@ -41,12 +41,14 @@ body, html {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.95);
   padding: 20px;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
 }
+
 #end-screen p {
   margin: 10px 0;
   font-size: 1.2em;
