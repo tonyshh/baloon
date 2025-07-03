@@ -9,25 +9,29 @@
   const targetEl = document.getElementById('target-word');
   document.getElementById('total').textContent = total;
 
-  function pickTarget() {
-    const idx = Math.floor(Math.random() * remaining.length);
-    return remaining[idx];
-  }
-
   function showEndScreen() {
-    container.innerHTML = '';
-    const end = document.createElement('div');
-    end.id = 'end-screen';
-    end.innerHTML = `
-      <p>🎉 Поздравляем!</p>
-      <p>Ты лопнул все ${total} шариков за ${hits} ход${hits % 10 === 1 && hits !== 11 ? '' : 'ов'}!</p>
-      <button id="end-button">Закрыть</button>
-    `;
-    container.appendChild(end);
-    document
-      .getElementById('end-button')
-      .addEventListener('click', () => Telegram.WebApp.close());
-  }
+  // Прячем все игровые элементы
+  document.getElementById('balloon-container').style.display = 'none';
+  document.getElementById('target').style.display = 'none';
+  document.getElementById('score').style.display = 'none';
+
+  // Рендерим оверлей
+  const game = document.getElementById('game');
+  const end = document.createElement('div');
+  end.id = 'end-screen';
+  end.innerHTML = `
+    <p>🎉 Поздравляем!</p>
+    <p>Ты лопнул все ${total} шариков за ${hits} ход${hits % 10 === 1 && hits !== 11 ? '' : 'ов'}!</p>
+    <button id="end-button">Закрыть</button>
+  `;
+  game.appendChild(end);
+
+  // Кнопка закрытия
+  document
+    .getElementById('end-button')
+    .addEventListener('click', () => Telegram.WebApp.close());
+}
+
 
   let current = pickTarget();
   targetEl.textContent = current.translate;
