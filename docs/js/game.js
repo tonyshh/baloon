@@ -1,26 +1,24 @@
 (async () => {
-  // 1) Загружаем пары:
   const res = await fetch('data/pairs.json');
   const pairs = await res.json();
   let remaining = [...pairs];
   let hits = 0;
   const total = pairs.length;
 
-  // 2) Ссылки на DOM:
   const container = document.getElementById('balloon-container');
-  const targetEl  = document.getElementById('target-word');
-  document.getElementById('total').textContent = total;
+  const targetEl = document.getElementById('target-word');
+  const hitsEl = document.getElementById('hits');
+  const totalEl = document.getElementById('total');
 
-  // 3) Помощник для случайного выбора:
+  totalEl.textContent = total;
+
   function pickTarget() {
     return remaining[Math.floor(Math.random() * remaining.length)];
   }
 
-  // 4) Показываем финальный экран:
   function showEndScreen() {
-    console.log("🛑 showEndScreen called, hits=", hits, "total=", total);
+    console.log("✅ showEndScreen — hits:", hits);
     const game = document.getElementById('game');
-    // полная очистка и замена разметки:
     game.innerHTML = `
       <div id="end-screen">
         <p>🎉 Поздравляем!</p>
@@ -33,11 +31,9 @@
       .addEventListener('click', () => Telegram.WebApp.close());
   }
 
-  // 5) Устанавливаем первую цель:
   let current = pickTarget();
   targetEl.textContent = current.translate;
 
-  // 6) Рендер шариков:
   function renderBalloons() {
     container.innerHTML = '';
     remaining.forEach(pair => {
@@ -49,25 +45,20 @@
 
       el.addEventListener('click', () => {
         if (pair.translate === current.translate) {
-          // правильный шарик
           hits++;
-          document.getElementById('hits').textContent = hits;
-          remaining = remaining.filter(p => p.translate !== pair.translate);
-          // и сразу удаляем элемент
+          hitsEl.textContent = hits;
+          remaining = remaining.filter(p => p !== pair);
           el.remove();
 
           if (remaining.length === 0) {
-            // последний шарик
             Telegram.WebApp.sendData(JSON.stringify({ hits, total }));
             showEndScreen();
           } else {
-            // новая цель и перерисовка
             current = pickTarget();
             targetEl.textContent = current.translate;
             renderBalloons();
           }
         } else {
-          // неверно — подсветка
           el.style.background = '#e57373';
           setTimeout(() => el.style.background = '#ff8a65', 300);
         }
@@ -77,6 +68,5 @@
     });
   }
 
-  // 7) Старт
   renderBalloons();
 })();
