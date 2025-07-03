@@ -1,22 +1,22 @@
 from aiogram import Router, types
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
 import json
 
 router = Router()
 
-@router.message(commands=['game'])
+@router.message(commands=["game"])
 async def cmd_game(message: types.Message):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(
-            text="Лопни шарик 🎈",
-            web_app=WebAppInfo(url="https://YOUR_DOMAIN/index.html")
-        )]
+        [
+            InlineKeyboardButton(
+                text="Играть 🎈",
+                web_app=WebAppInfo(url="https://example.com/index.html")  # замени на свой
+            )
+        ]
     ])
-    await message.answer("Игра «Лопни шарик»: кликай только по правильным словам!", reply_markup=keyboard)
+    await message.answer("Нажми, чтобы начать игру:", reply_markup=keyboard)
 
-@router.message(content_types=types.ContentType.WEB_APP_DATA)
-async def webapp_result(message: types.Message):
+@router.message(lambda m: m.web_app_data)
+async def handle_webapp(message: types.Message):
     data = json.loads(message.web_app_data.data)
-    hits = data.get('hits', 0)
-    total = data.get('total', 0)
-    await message.answer(f"🎉 Молодец! Ты лопнул все {hits} шариков из {total}!")
+    await message.answer(f"🎉 Ты лопнул {data.get('hits')} из {data.get('total')} шариков!")
