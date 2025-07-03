@@ -1,0 +1,8 @@
+[
+  { "word": "apple", "translate": "яблоко" },
+  { "word": "dog",   "translate": "собака" },
+  { "word": "car",   "translate": "машина" },
+  { "word": "book",  "translate": "книга" },
+  { "word": "sun",   "translate": "солнце" },
+  { "word": "cat",   "translate": "кот" }
+]
