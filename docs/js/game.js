@@ -36,6 +36,8 @@
 
           // удаляем отгаданную пару
           remaining = remaining.filter(p => p.translate !== pair.translate);
+          // сразу убираем шарик из DOM+
+          el.remove();
 
           if (remaining.length === 0) {
             // все отгадали
