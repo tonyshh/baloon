@@ -9,17 +9,29 @@
   const targetEl = document.getElementById('target-word');
   document.getElementById('total').textContent = total;
 
-  // Выбирает случайную пару из remaining
   function pickTarget() {
     const idx = Math.floor(Math.random() * remaining.length);
     return remaining[idx];
   }
 
-  // Устанавливаем первую цель
+  function showEndScreen() {
+    container.innerHTML = '';
+    const end = document.createElement('div');
+    end.id = 'end-screen';
+    end.innerHTML = `
+      <p>🎉 Поздравляем!</p>
+      <p>Ты лопнул все ${total} шариков за ${hits} ход${hits % 10 === 1 && hits !== 11 ? '' : 'ов'}!</p>
+      <button id="end-button">Закрыть</button>
+    `;
+    container.appendChild(end);
+    document
+      .getElementById('end-button')
+      .addEventListener('click', () => Telegram.WebApp.close());
+  }
+
   let current = pickTarget();
   targetEl.textContent = current.translate;
 
-  // Рендерим все шары из remaining
   function renderBalloons() {
     container.innerHTML = '';
     remaining.forEach(pair => {
@@ -28,20 +40,21 @@
       el.textContent = pair.word;
       el.style.left = Math.random() * 80 + '%';
       el.style.animationDuration = (5 + Math.random() * 5) + 's';
+
       el.addEventListener('click', () => {
         if (pair.translate === current.translate) {
-          // угадали
+          // правильный шарик
           hits++;
           document.getElementById('hits').textContent = hits;
 
-          // удаляем отгаданную пару
+          // удаляем из remaining и из DOM
           remaining = remaining.filter(p => p.translate !== pair.translate);
-          // сразу убираем шарик из DOM+
           el.remove();
 
           if (remaining.length === 0) {
-            // все отгадали
+            // последний шарик
             Telegram.WebApp.sendData(JSON.stringify({ hits, total }));
+            showEndScreen();
           } else {
             // новая цель
             current = pickTarget();
@@ -49,15 +62,16 @@
             renderBalloons();
           }
         } else {
-          // неверно — короткая подсветка
+          // неверный — подсветка
           el.style.background = '#e57373';
           setTimeout(() => el.style.background = '#ff8a65', 300);
         }
       });
+
       container.appendChild(el);
     });
   }
 
-  // старт
+  // запускаем игру
   renderBalloons();
 })();
