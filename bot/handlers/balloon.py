@@ -13,7 +13,7 @@ async def cmd_game(message: types.Message):
         [
             InlineKeyboardButton(
                 text="Играть 🎈",
-                web_app=WebAppInfo(url="https://example.com/index.html")  # ЗАМЕНИ на свой URL
+                web_app=WebAppInfo(url="https://tonyshh.github.io/baloon/")  # ЗАМЕНИ на свой URL
             )
         ]
     ])
